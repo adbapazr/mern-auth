@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
-import bcryptjs from 'bcryptjs';
 dotenv.config();
 
 mongoose
@@ -12,7 +11,7 @@ mongoose
     console.log('Connected to MongoDB');
 })
 .catch((error) => {
-    console.log(error);
+  console.log(error);
 });
 
 const app = express();
@@ -25,3 +24,14 @@ app.listen(process.env.PORT, () => {
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  return res.status(statusCode).json({
+    success: false,
+    message,
+    statusCode
+  });
+});
