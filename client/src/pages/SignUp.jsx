@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
-import backgroundImage from '../assets/images/friends-people-group-teamwork-diversity.jpg';
 import { useState } from 'react';
-import { set } from 'mongoose';
 
 export const SignUp = () => {
   const [formData, setFormData] = useState({username: '', email: '', password: ''});
@@ -40,10 +38,6 @@ export const SignUp = () => {
     }
   };
   return (
-    <div className='min-h-screen flex items-center justify-center bg-cover bg-center' 
-    style={{ 
-      backgroundImage: `url(${backgroundImage})`
-    }}>
       <div className='p-3 max-w-lg mx-auto'>
         <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
         <form onSubmit={handleSubmit}>
@@ -51,7 +45,7 @@ export const SignUp = () => {
             <input type='text' placeholder='Username' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='username' onChange={handleChange}/>
             <input type='email' placeholder='Email' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='email' onChange={handleChange}/>
             <input type='password' placeholder='Password' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='password' onChange={handleChange}/>
-            <button disabled={loading} type='submit' className='bg-blue-500 text-white p-3 rounded-md my-2 hover:opacity-95 disabled:opacity-60 uppercase'>
+            <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg uppercace hover:opacity-95 disabled:opacity-80'>
               {loading ? 'Loading...' : 'Sign Up'}
             </button>
           </div>
@@ -64,6 +58,5 @@ export const SignUp = () => {
         </div>
         <p className='text-red-700 mt-5'>{error && 'Something went wrong!'}</p>
       </div>
-    </div>
   )
 }
