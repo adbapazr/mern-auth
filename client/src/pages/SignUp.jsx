@@ -1,7 +1,44 @@
 import { Link } from 'react-router-dom';
 import backgroundImage from '../assets/images/friends-people-group-teamwork-diversity.jpg';
+import { useState } from 'react';
+import { set } from 'mongoose';
 
 export const SignUp = () => {
+  const [formData, setFormData] = useState({username: '', email: '', password: ''});
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError(false);
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (data.success === false) {
+        setError(true);
+        return;
+      }
+    } catch (error) {
+      setLoading(false);
+      setError(true);
+    }
+  };
   return (
     <div className='min-h-screen flex items-center justify-center bg-cover bg-center' 
     style={{ 
@@ -9,12 +46,14 @@ export const SignUp = () => {
     }}>
       <div className='p-3 max-w-lg mx-auto'>
         <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className='flex flex-col gap-2'>
-            <input type='text' placeholder='Username' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='username'/>
-            <input type='email' placeholder='Email' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='email'/>
-            <input type='password' placeholder='Password' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='password'/>
-            <button type='submit' className='bg-blue-500 text-white p-3 rounded-md my-2 hover:opacity-95 disabled:opacity-60 uppercase'>Sign Up</button>
+            <input type='text' placeholder='Username' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='username' onChange={handleChange}/>
+            <input type='email' placeholder='Email' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='email' onChange={handleChange}/>
+            <input type='password' placeholder='Password' className='border-2 bg-slate-100 border-gray-300 p-3 rounded-lg my-2' id='password' onChange={handleChange}/>
+            <button disabled={loading} type='submit' className='bg-blue-500 text-white p-3 rounded-md my-2 hover:opacity-95 disabled:opacity-60 uppercase'>
+              {loading ? 'Loading...' : 'Sign Up'}
+            </button>
           </div>
         </form>
         <div className='flex gap-2 mt-3'>
@@ -23,6 +62,7 @@ export const SignUp = () => {
             <span className='text-blue-500'>Sign In</span>
           </Link>
         </div>
+        <p className='text-red-700 mt-5'>{error && 'Something went wrong!'}</p>
       </div>
     </div>
   )
